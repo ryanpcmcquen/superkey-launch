@@ -3,6 +3,9 @@
  *
  * Copyright 2012 Albin Olsson
  * 
+ * forked from xcape by Albin Olsson
+ * https://github.com/alols/xcape
+ * 
  * Copyright 2014 Ryan P.C. McQuen, WA, ryan.q@linux.com
  *
  * This program is free software: you can redistribute it and/or modify
