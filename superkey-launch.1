@@ -1,18 +1,18 @@
-.TH XCAPE 1 2014-02-13 "John Hill" "xcape Manual"
+.TH SUPERKEY-LAUNCH 1 2014-02-13 "John Hill" "superkey-launch Manual"
 
 .SH NAME
-xcape \- use a modifier key as another key
+superkey-launch \- use a modifier key as another key
 
 .SH SYNOPSIS
-.B xcape
+.B superkey-launch
 [\fB-d\fR]
 [\fB-t\fR \fItimeout\fR]
 [\fB-e\fR \fImap-expression\fR]
 
 .SH DESCRIPTION
-\fBxcape\fR allows a modifier key to be used as another key when it is pressed
-and released on its own. The default behaviour is to generate the \fIEscape\fR
-key in place of \fIControl_L\fR (Left Control).
+\fBsuperkey-launch\fR allows a modifier key to be used as another key when it is pressed
+and released on its own. The default behaviour is to generate the \fIAlt_L|F2\fR
+key in place of \fISuper_L\fR (Superkey).
 
 .SH OPTIONS
 .TP
@@ -49,12 +49,12 @@ found.
 Make Left Shift generate Escape when pressed and released on it's own, and Left
 Control generate Ctrl\-O combination when pressed and released on it's own:
 .RS
-\fBxcape\fR \fB-e\fR '\fIShift_L\fR=\fIEscape\fR;\fIControl_L\fR=\fIControl_L\fR|\fIO\fR'
+\fBsuperkey-launch\fR \fB-e\fR '\fIShift_L\fR=\fIEscape\fR;\fIControl_L\fR=\fIControl_L\fR|\fIO\fR'
 .RE
 .PP
 In conjugation with xmodmap it is possible to make an ordinary key act as an
 extra modifier. First map the key to the modifier with xmodmap and then the
-modifier back to the key with \fBxcape\fR. As an example, we can make the space
+modifier back to the key with \fBsuperkey-launch\fR. As an example, we can make the space
 bar work as an additional ctrl key when held with the following sequence of
 commands:
 .PP
@@ -72,21 +72,21 @@ when you press it. Hyper_L is a good candidate.
 .fi
 .RE
 .PP
-Next, map space to an unused keycode (to keep it around for \fBxcape\fR to use).
+Next, map space to an unused keycode (to keep it around for \fBsuperkey-launch\fR to use).
 .PP
 .RS
 \fBxmodmap\fR \fR-e\fR "\fBkeycode\fR \fIany\fR = \fIspace\fR"
 .RE
 .PP
-Finally use \fBxcape\fR to cause the space bar to generate a space when tapped.
+Finally use \fBsuperkey-launch\fR to cause the space bar to generate a space when tapped.
 .PP
 .RS
-\fBxcape\fR \fB-e\fR "\fI$spare_modifier\fR=\fIspace\fR"
+\fBsuperkey-launch\fR \fB-e\fR "\fI$spare_modifier\fR=\fIspace\fR"
 .RE
 
 .SH SEE ALSO
 \fBxmodmap\fR(1), \fBxev\fR(1)
 
 .SH AUTHOR
-\fBxcape\fR was written by Albin Olsson
-(albin dot olsson at gmail dot com)
+\fBsuperkey-launch\fR was written by Albin Olsson, forked by Ryan P.C. McQuen
+(ryan dot q at linux dot com)

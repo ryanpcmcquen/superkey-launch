@@ -1,7 +1,9 @@
 /************************************************************************
- * xcape.c
+ * superkey-launch.c
  *
  * Copyright 2012 Albin Olsson
+ * 
+ * Copyright 2014 Ryan P.C. McQuen, WA, ryan.q@linux.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -87,7 +89,7 @@ int main (int argc, char **argv)
 {
     XCape_t *self = malloc (sizeof (XCape_t));
     int dummy, ch;
-    static char default_mapping[] = "Control_L=Escape";
+    static char default_mapping[] = "Super_L=Alt_L|F2";
     char *mapping = default_mapping;
     self->debug = False;
     self->timeout.tv_sec = 0;

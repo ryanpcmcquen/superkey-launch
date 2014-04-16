@@ -1,7 +1,7 @@
-XCAPE
+SUPERKEY-LAUNCH
 =====
 
-xcape allows you to use a modifier key as another key when pressed and
+superkey-launch allows you to use a modifier key as another key when pressed and
 released on its own. Note that it is slightly slower than pressing the
 original key, because the pressed event does not occur until the key is
 released. The default behaviour is to generate the Escape key when Left
@@ -13,14 +13,14 @@ Minimal building instructions
 -----------------------------
 
     $ sudo apt-get install git gcc make pkg-config libx11-dev libxtst-dev libxi-dev
-    $ mkdir xcape
-    $ cd xcape
-    $ git clone https://github.com/alols/xcape.git .
+    $ mkdir superkey-launch
+    $ cd superkey-launch
+    $ git clone https://github.com/ryanpcmcquen/superkey-launch.git .
     $ make
 
 Usage
 -----
-    $ xcape [-d] [-t <timeout ms>] [-e <map-expression>]
+    $ superkey-launch [-d] [-t <timeout ms>] [-e <map-expression>]
 
 ### `-d`
 
@@ -28,7 +28,7 @@ Debug mode. Does not fork into the background.
 
 ### `-t <timeout ms>`
 
-If you hold a key longer than this timeout, xcape will not generate a key
+If you hold a key longer than this timeout, superkey-launch will not generate a key
 event. Default is 500 ms.
 
 ### `-e <map-expression>`
@@ -52,14 +52,14 @@ key name is found.
     it's own, and Left Control generate Ctrl-O combination when pressed and
     released on it's own.
 
-        xcape -e 'Shift_L=Escape;Control_L=Control_L|O'
+        superkey-launch -e 'Shift_L=Escape;Control_L=Control_L|O'
 
 +   In conjugation with xmodmap it is possible to make an ordinary key act
     as an extra modifier. First map the key to the modifier with xmodmap
-    and then the modifier back to the key with xcape. However, this has
+    and then the modifier back to the key with superkey-launch. However, this has
     several limitations: the key will not work as ordinary until it is
     relased, and in particular, *it may act as a modifier unintentionally if
-    you type too fast.* This is not a bug in xcape, but an unavoidable
+    you type too fast.* This is not a bug in superkey-launch, but an unavoidable
     consequence of using these two tools together in this way.
     As an example, we can make the space bar work as an additional ctrl
     key when held (similar to
@@ -74,12 +74,12 @@ key name is found.
         xmodmap -e "remove mod4 = $spare_modifier" # hyper_l is mod4 by default
         xmodmap -e "add Control = $spare_modifier"
 
-        # Map space to an unused keycode (to keep it around for xcape to
+        # Map space to an unused keycode (to keep it around for superkey-launch to
         # use).
         xmodmap -e "keycode any = space"
 
-        # Finally use xcape to cause the space bar to generate a space when tapped.
-        xcape -e "$spare_modifier=space"
+        # Finally use superkey-launch to cause the space bar to generate a space when tapped.
+        superkey-launch -e "$spare_modifier=space"
 
 
 Note regarding xmodmap
@@ -88,8 +88,8 @@ Note regarding xmodmap
 If you are in the habit of remapping keycodes to keysyms (eg, using xmodmap),
 there are two issues you may encounter.
 
-1. You will need to restart xcape after every time you modify the mapping from
-   keycodes to keysyms (eg, with xmodmap), or xcape will still use the old
+1. You will need to restart superkey-launch after every time you modify the mapping from
+   keycodes to keysyms (eg, with xmodmap), or superkey-launch will still use the old
    mapping.
 
 2. The key you wish to send must have a defined keycode. So for example, with
@@ -101,7 +101,7 @@ Contact
 -------
 
 Find the latest version at
-https://github.com/alols/xcape
+https://github.com/ryanpcmcquen/superkey-launch
 
 The author can be reached at
-albin dot olsson at gmail dot com
+ryan dot q at linux dot com
