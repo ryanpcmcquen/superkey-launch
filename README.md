@@ -93,7 +93,7 @@ there are two issues you may encounter.
    mapping.
 
 2. The key you wish to send must have a defined keycode. So for example, with
-   the default mapping `Control_L=Escape`, you still need an escape key defined
+   the default mapping `Super_L=Alt_L|F2`, you still need an Alt+F2 key defined
    in your xmodmap mapping. (I get around this by using 255, which my keyboard
    cannot send).
 
