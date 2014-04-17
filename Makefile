@@ -14,7 +14,7 @@ $(TARGET): superkey-launch.c
 
 install:
 	$(INSTALL) -Dm 755 $(TARGET) $(DESTDIR)$(PREFIX)/bin/$(TARGET)
-	$(INSTALL) -Dm 644 superkey-launch.1 $(DESTDIR)$(PREFIX)$(MANDIR)/xcape.1
+	$(INSTALL) -Dm 644 superkey-launch.1 $(DESTDIR)$(PREFIX)$(MANDIR)/superkey-launch.1
 
 clean:
 	rm $(TARGET)
