@@ -9,13 +9,13 @@ Left Superkey is pressed and released on its own. This allows you
 to quickly launch applications in many popular Linux desktop
 environments (Mate, XFCE, KDE, Fluxbox and more!).
 
+Slackware Linux SlackBuild available here:
+
+http://slackbuilds.org/repository/14.1/desktop/superkey-launch/
 
 Minimal building instructions
 -----------------------------
 
-    $ sudo apt-get install git gcc make pkg-config libx11-dev libxtst-dev libxi-dev
-    $ mkdir superkey-launch
-    $ cd superkey-launch
     $ git clone https://github.com/ryanpcmcquen/superkey-launch.git .
     $ make
 
