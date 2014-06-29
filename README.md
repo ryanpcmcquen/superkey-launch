@@ -13,6 +13,9 @@ Slackware Linux SlackBuild available here:
 
 http://slackbuilds.org/repository/14.1/desktop/superkey-launch/
 
+To start superkey-launch at startup with all X environments,
+place superkey-launch.desktop in /etc/xdg/autostart.
+
 Minimal building instructions
 -----------------------------
 
