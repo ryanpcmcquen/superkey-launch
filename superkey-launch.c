@@ -49,7 +49,7 @@ typedef struct _Key_t
 
 typedef struct _KeyMap_t
 {
-    Bool UseKeyCode;        // (for from) instead of KeySym; ignore latter
+    Bool UseKeyCode;        /* (for from) instead of KeySym; ignore latter */
     KeySym from_ks;
     KeyCode from_kc;
     Key_t *to_keys;
@@ -126,11 +126,22 @@ int main (int argc, char **argv)
             }
             break;
         default:
-            fprintf (stdout, "Usage: %s [-d] [-t timeout_ms] [-e <mapping>]\n", argv[0]);
-            fprintf (stdout,
-                    "Runs as a daemon unless -d flag is set\n");
+            print_usage (argv[0]);
             return EXIT_SUCCESS;
         }
+    }
+
+    if (optind < argc)
+    {
+        fprintf (stderr, "Not a command line option: '%s'\n", argv[optind]);
+        print_usage (argv[0]);
+        return EXIT_SUCCESS;
+    }
+
+    if (!XInitThreads ())
+    {
+        fprintf (stderr, "Failed to initialize threads.\n");
+        exit (EXIT_FAILURE);
     }
 
     self->data_conn = XOpenDisplay (NULL);
@@ -162,7 +173,10 @@ int main (int argc, char **argv)
     self->map = parse_mapping (self->ctrl_conn, mapping, self->debug);
 
     if (self->map == NULL)
+    {
+        fprintf (stderr, "Failed to parse_mapping\n");
         exit (EXIT_FAILURE);
+    }
 
     if (self->debug != True)
         daemon (0, 0);
@@ -174,11 +188,6 @@ int main (int argc, char **argv)
 
     pthread_create (&self->sigwait_thread,
             NULL, sig_handler, self);
-
-    XRecordRange *rec_range = XRecordAllocRange();
-    rec_range->device_events.first = KeyPress;
-    rec_range->device_events.last = ButtonRelease;
-    XRecordClientSpec client_spec = XRecordAllClients;
 
     self->record_ctx = XRecordCreateContext (self->ctrl_conn,
             0, &client_spec, 1, &rec_range, 1);
@@ -198,15 +207,23 @@ int main (int argc, char **argv)
         exit (EXIT_FAILURE);
     }
 
+    pthread_join (self->sigwait_thread, NULL);
+
     if (!XRecordFreeContext (self->ctrl_conn, self->record_ctx))
     {
         fprintf (stderr, "Failed to free xrecord context\n");
     }
 
+    if (self->debug) fprintf (stdout, "main exiting\n");
+
+    XFree (rec_range);
+
     XCloseDisplay (self->ctrl_conn);
     XCloseDisplay (self->data_conn);
 
-    if (self->debug) fprintf (stdout, "main exiting\n");
+    delete_mapping (self->map);
+
+    free (self);
 
     return EXIT_SUCCESS;
 }
@@ -226,6 +243,8 @@ void *sig_handler (void *user_data)
 
     if (self->debug) fprintf (stdout, "Caught signal %d!\n", sig);
 
+    XLockDisplay (self->ctrl_conn);
+
     if (!XRecordDisableContext (self->ctrl_conn,
                 self->record_ctx))
     {
@@ -234,6 +253,8 @@ void *sig_handler (void *user_data)
     }
 
     XSync (self->ctrl_conn, False);
+
+    XUnlockDisplay (self->ctrl_conn);
 
     if (self->debug) fprintf (stdout, "sig_handler exiting...\n");
 
@@ -324,6 +345,8 @@ void intercept (XPointer user_data, XRecordInterceptData *data)
     static Bool mouse_pressed = False;
     KeyMap_t *km;
 
+    XLockDisplay (self->ctrl_conn);
+
     if (data->category == XRecordFromServer)
     {
         int     key_event = data->data[0];
@@ -383,6 +406,7 @@ void intercept (XPointer user_data, XRecordInterceptData *data)
     }
 
 exit:
+    XUnlockDisplay (self->ctrl_conn);
     XRecordFreeData (data);
 }
 
@@ -391,8 +415,8 @@ KeyMap_t *parse_token (Display *dpy, char *token, Bool debug)
     KeyMap_t *km = NULL;
     KeySym    ks;
     char      *from, *to, *key;
-    KeyCode   code;        // keycode (to)
-    long      fromcode;    // keycode (from)
+    KeyCode   code;        /* keycode (to)   */
+    long      fromcode;    /* keycode (from) */
 
     to = token;
     from = strsep (&to, "=");
@@ -404,7 +428,7 @@ KeyMap_t *parse_token (Display *dpy, char *token, Bool debug)
                && strsep (&from, "#") != NULL)
         {
             errno = 0;
-            fromcode = strtoul (from, NULL, 0); // dec, oct, hex automatically
+            fromcode = strtoul (from, NULL, 0); /* dec, oct, hex automatically */
             if (errno == 0
                    && fromcode <=255
                    && XkbKeycodeToKeysym (dpy, (KeyCode) fromcode, 0, 0) != NoSymbol)
@@ -515,4 +539,29 @@ KeyMap_t *parse_mapping (Display *ctrl_conn, char *mapping, Bool debug)
     }
 
     return rval;
+}
+
+void delete_mapping (KeyMap_t *map)
+{
+    while (map != NULL) {
+        KeyMap_t *next = map->next;
+        delete_keys (map->to_keys);
+        free (map);
+        map = next;
+    }
+}
+
+void delete_keys (Key_t *keys)
+{
+    while (keys != NULL) {
+        Key_t *next = keys->next;
+        free (keys);
+        keys = next;
+    }
+}
+
+void print_usage (const char *program_name)
+{
+    fprintf (stdout, "Usage: %s [-d] [-t timeout_ms] [-e <mapping>]\n", program_name);
+    fprintf (stdout, "Runs as a daemon unless -d flag is set\n");
 }
