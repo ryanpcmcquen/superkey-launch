@@ -22,8 +22,9 @@ place superkey-launch.desktop in /etc/xdg/autostart.
 Minimal building instructions
 -----------------------------
 
-    $ git clone https://github.com/ryanpcmcquen/superkey-launch.git .
+    $ git clone https://github.com/ryanpcmcquen/superkey-launch.git
     $ make
+    $ sudo make install
 
 Usage
 -----
