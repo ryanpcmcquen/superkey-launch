@@ -189,6 +189,12 @@ int main (int argc, char **argv)
     pthread_create (&self->sigwait_thread,
             NULL, sig_handler, self);
 
+    /* added these back in, even though upstream removed them, they seem to be breaking compilation */
+    XRecordRange *rec_range = XRecordAllocRange();
+    rec_range->device_events.first = KeyPress;
+    rec_range->device_events.last = ButtonRelease;
+    XRecordClientSpec client_spec = XRecordAllClients;
+
     self->record_ctx = XRecordCreateContext (self->ctrl_conn,
             0, &client_spec, 1, &rec_range, 1);
 
