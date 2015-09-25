@@ -83,7 +83,13 @@ void intercept (XPointer user_data, XRecordInterceptData *data);
 
 KeyMap_t *parse_mapping (Display *ctrl_conn, char *mapping, Bool debug);
 
+void delete_mapping (KeyMap_t *map);
+
 Key_t *key_add_key (Key_t *keys, KeyCode key);
+
+void delete_keys (Key_t *keys);
+
+void print_usage (const char *program_name);
 
 /************************************************************************
  * Main function
@@ -94,11 +100,18 @@ int main (int argc, char **argv)
     int dummy, ch;
     static char default_mapping[] = "Super_L=Alt_L|F2";
     char *mapping = default_mapping;
+
+    XRecordRange *rec_range = XRecordAllocRange();
+    XRecordClientSpec client_spec = XRecordAllClients;
+
     self->debug = False;
     self->timeout.tv_sec = 0;
     self->timeout.tv_usec = 500000;
     self->timeout_valid = True;
     self->generated = NULL;
+
+    rec_range->device_events.first = KeyPress;
+    rec_range->device_events.last = ButtonRelease;
 
     while ((ch = getopt (argc, argv, "de:t:")) != -1)
     {
@@ -188,12 +201,6 @@ int main (int argc, char **argv)
 
     pthread_create (&self->sigwait_thread,
             NULL, sig_handler, self);
-
-    /* added these back in, even though upstream removed them, they seem to be breaking compilation */
-    XRecordRange *rec_range = XRecordAllocRange();
-    rec_range->device_events.first = KeyPress;
-    rec_range->device_events.last = ButtonRelease;
-    XRecordClientSpec client_spec = XRecordAllClients;
 
     self->record_ctx = XRecordCreateContext (self->ctrl_conn,
             0, &client_spec, 1, &rec_range, 1);
