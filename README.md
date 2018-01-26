@@ -11,8 +11,7 @@ environments (Mate, XFCE, KDE, Fluxbox and more!).
 
 Slackware Linux SlackBuild available here:
 
-http://slackbuilds.org/repository/14.1/desktop/superkey-launch/
-
+http://slackbuilds.org/apps/superkey-launch/
 
 ###AUTOSTART
 To start superkey-launch at startup within all X environments,
