@@ -1,6 +1,6 @@
 INSTALL=install
 PREFIX=/usr
-MANDIR?=/local/man/man1
+MANDIR?=/share/man/man1
 
 TARGET := superkey-launch
 
